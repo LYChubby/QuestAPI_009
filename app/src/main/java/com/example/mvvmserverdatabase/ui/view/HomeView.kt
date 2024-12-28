@@ -2,6 +2,9 @@ package com.example.mvvmserverdatabase.ui.view
 
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -10,14 +13,18 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mvvmserverdatabase.model.Mahasiswa
 import com.example.mvvmserverdatabase.navigation.DestinasiNavigasi
 import com.example.mvvmserverdatabase.ui.customwidget.CostumeTopAppBar
+import com.example.mvvmserverdatabase.ui.viewmodel.HomeUiState
 import com.example.mvvmserverdatabase.ui.viewmodel.HomeViewModel
 
 object DestinasiHome: DestinasiNavigasi {
@@ -67,5 +74,41 @@ fun HomeScreen(
                 viewModel.getMhs()
             }
         )
+    }
+}
+
+@Composable
+fun HomeStatus(
+    homeUiState: HomeUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (Mahasiswa) -> Unit = {},
+    onDetailClick: (String) -> Unit
+) {
+
+    when (homeUiState) {
+        is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+        is HomeUiState.Success ->
+            if (homeUiState.mhsList.isEmpty()) {
+                return Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Tidak Ada Data Kontak")
+                }
+            } else {
+                MhsLayout(
+                    mahasiswa = homeUiState.mahasiswa,
+                    modifier = modifier.fillMaxWidth(),
+                    onDeleteClick = {
+                        onDeleteClick(it)
+                    },
+                    onDetailClick = {
+                        onDetailClick(it.nim)
+                    }
+                )
+            }
+        is HomeUiState.Error -> OnError(retryAction = retryAction, modifier = modifier.fillMaxSize())
     }
 }
