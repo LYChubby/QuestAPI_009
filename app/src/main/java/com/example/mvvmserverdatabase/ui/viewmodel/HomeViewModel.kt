@@ -1,4 +1,4 @@
-package com.example.mvvmserverdatabase.viewmodel
+package com.example.mvvmserverdatabase.ui.viewmodel
 
 import android.net.http.HttpException
 import android.os.Build

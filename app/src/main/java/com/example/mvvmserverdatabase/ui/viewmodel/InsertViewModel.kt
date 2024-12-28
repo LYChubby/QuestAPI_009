@@ -1,4 +1,4 @@
-package com.example.mvvmserverdatabase.viewmodel
+package com.example.mvvmserverdatabase.ui.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class InsertViewModel (private val mhs: MahasiswaRepository) : ViewModel() {
     var uiState by mutableStateOf(InsertUiState())
-    private set
+        private set
 
     fun updateInsertMhsState(insertUiEvent.InsertUiEvent) {
         uiState = InsertUiState(insertUiEvent = insertUiEvent)
@@ -50,7 +50,7 @@ fun InsertUiEvent.toMhs(): Mahasiswa = Mahasiswa(
     angkatan = angkatan
 )
 
-fun Mahasiswa.toUiStateMhs():InsertUiState = InsertUiState(
+fun Mahasiswa.toUiStateMhs(): InsertUiState = InsertUiState(
     insertUiEvent = toInsertUivent()
 )
 
