@@ -2,6 +2,7 @@ package com.example.mvvmserverdatabase.ui.view
 
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mvvmserverdatabase.R
 import com.example.mvvmserverdatabase.model.Mahasiswa
 import com.example.mvvmserverdatabase.navigation.DestinasiNavigasi
 import com.example.mvvmserverdatabase.ui.customwidget.CostumeTopAppBar
@@ -111,4 +115,13 @@ fun HomeStatus(
             }
         is HomeUiState.Error -> OnError(retryAction = retryAction, modifier = modifier.fillMaxSize())
     }
+}
+
+@Composable
+fun OnLoading(modifier: Modifier = Modifier) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.loading_img),
+        contentDescription = stringResource(R.string.loading)
+    )
 }
