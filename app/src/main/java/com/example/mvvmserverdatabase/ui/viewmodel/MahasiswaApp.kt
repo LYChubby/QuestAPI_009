@@ -16,10 +16,12 @@ import com.example.mvvmserverdatabase.navigation.PengelolaHalaman
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MahasiswaApp() {
+fun MahasiswaApp(
+    modifier: Modifier = Modifier
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold (
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ){
         Surface(
             modifier = Modifier.fillMaxSize()

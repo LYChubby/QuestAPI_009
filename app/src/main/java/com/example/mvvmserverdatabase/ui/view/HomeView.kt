@@ -44,6 +44,7 @@ import com.example.mvvmserverdatabase.navigation.DestinasiNavigasi
 import com.example.mvvmserverdatabase.ui.customwidget.CostumeTopAppBar
 import com.example.mvvmserverdatabase.ui.viewmodel.HomeUiState
 import com.example.mvvmserverdatabase.ui.viewmodel.HomeViewModel
+import com.example.mvvmserverdatabase.ui.viewmodel.PenyediaViewModel
 
 object DestinasiHome: DestinasiNavigasi {
     override val route = "home"

@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
             MVVMServerDatabaseTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MahasiswaApp(
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
