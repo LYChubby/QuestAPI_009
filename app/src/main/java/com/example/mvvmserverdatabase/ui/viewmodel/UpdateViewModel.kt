@@ -14,11 +14,11 @@ import android.os.Build
 import androidx.annotation.RequiresExtension
 
 class UpdateViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
-    var uiState by mutableStateOf(UpdateUiState())
+    var UpdateuiState by mutableStateOf(UpdateUiState())
         private set
 
     fun updateState(updateUiEvent: UpdateUiEvent) {
-        uiState = UpdateUiState(updateUiEvent = updateUiEvent)
+        UpdateuiState = UpdateUiState(updateUiEvent = updateUiEvent)
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -26,7 +26,7 @@ class UpdateViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 val mahasiswa = mhs.getMahasiswaByNim(nim)
-                uiState = mahasiswa.toUpdateUiState()
+                UpdateuiState = mahasiswa.toUpdateUiState()
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: HttpException) {
@@ -39,7 +39,7 @@ class UpdateViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
     fun updateMhs() {
         viewModelScope.launch {
             try {
-                val mahasiswa = uiState.updateUiEvent.toMhs()
+                val mahasiswa = UpdateuiState.updateUiEvent.toMhs()
                 mhs.updateMahasiswa(mahasiswa.nim, mahasiswa)
             } catch (e: IOException) {
                 e.printStackTrace()
