@@ -1,5 +1,7 @@
 package com.example.mvvmserverdatabase.ui.viewmodel
 
+import com.example.mvvmserverdatabase.model.Mahasiswa
+
 data class DetailUiState(
     val detailUiEvent: InsertUiEvent = InsertUiEvent(),
     val isLoading: Boolean = false,
@@ -11,4 +13,15 @@ data class DetailUiState(
 
     val isUiEventNotEmpty: Boolean
         get() = detailUiEvent != InsertUiEvent()
+}
+
+fun Mahasiswa.toDetailUiEvent(): InsertUiEvent {
+    return InsertUiEvent(
+        nim = nim,
+        nama = nama,
+        alamat = alamat,
+        jenisKelamin = jenisKelamin,
+        kelas = kelas,
+        angkatan = angkatan
+    )
 }
