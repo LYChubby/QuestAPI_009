@@ -50,11 +50,10 @@ fun InsertUiEvent.toMhs(): Mahasiswa = Mahasiswa(
     angkatan = angkatan
 )
 
-fun Mahasiswa.toUiStateMhs(): InsertUiState = InsertUiState(
-    insertUiEvent = toInsertUivent()
+fun Mahasiswa.toInsertUiState(): InsertUiState = InsertUiState(
+    insertUiEvent = toInsertUiEvent()
 )
-
-fun Mahasiswa.toInsertUivent(): InsertUiEvent = InsertUiEvent(
+fun Mahasiswa.toInsertUiEvent(): InsertUiEvent = InsertUiEvent(
     nim = nim,
     nama = nama,
     alamat = alamat,
