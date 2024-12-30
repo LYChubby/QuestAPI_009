@@ -30,7 +30,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
     ) {
         composable(DestinasiHome.route) {
             HomeScreen(
-                navigateToItemEntry = { navController.navigate(DestinasiEntry.route) },
+                navigateToitemEntry = { navController.navigate(DestinasiEntry.route) },
                 onDetailClick = {nim ->
                     navController.navigate("${DestinasiDetail.route}/$nim")
                     println(

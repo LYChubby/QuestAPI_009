@@ -2,6 +2,7 @@ package com.example.mvvmserverdatabase.ui.viewmodel
 
 import android.net.http.HttpException
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresExtension
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,15 +14,16 @@ import com.example.mvvmserverdatabase.repository.MahasiswaRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-sealed class HomeUiState {
-    data class Success(val mahasiswa: List<Mahasiswa>) : HomeUiState()
-    object Error : HomeUiState()
-    object Loading : HomeUiState()
+sealed class HomeUiState{
+    data class Succes(val mahasiswa: List<Mahasiswa>): HomeUiState()
+    object Error: HomeUiState()
+    object Loading: HomeUiState()
 }
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-class HomeViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
-    var mhsUIState: HomeUiState by mutableStateOf(HomeUiState.Loading)
+class HomeViewModel(
+    private val mhs: MahasiswaRepository): ViewModel(){
+    var mhsUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set
 
     init {
@@ -29,26 +31,31 @@ class HomeViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    fun getMhs() {
+    fun getMhs(){
         viewModelScope.launch {
-            mhsUIState = HomeUiState.Loading
-            mhsUIState = try {
-                HomeUiState.Success(mhs.getMahasiswa())
+            mhsUiState = HomeUiState.Loading
+            mhsUiState = try {
+                val mahasiswaList = mhs.getMahasiswa()
+                Log.d("HomeViewModel", "Mahasiswa List: $mahasiswaList") // Debug log
+                HomeUiState.Succes(mahasiswaList)
             } catch (e: IOException) {
+                Log.e("HomeViewModel", "IOException: ${e.message}")
                 HomeUiState.Error
             } catch (e: HttpException) {
+                Log.e("HomeViewModel", "HttpException: ${e.message}")
                 HomeUiState.Error
             }
         }
     }
 
-    fun deleteMhs(nim: String) {
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    fun deleteMhs(nim: String){
         viewModelScope.launch {
             try {
                 mhs.deleteMahasiswa(nim)
-            } catch (e:IOException) {
+            } catch (e: IOException){
                 HomeUiState.Error
-            } catch (e: HttpException) {
+            } catch (e: HttpException){
                 HomeUiState.Error
             }
         }
