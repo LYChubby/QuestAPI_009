@@ -1,8 +1,5 @@
 package com.example.mvvmserverdatabase.ui.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvmserverdatabase.model.Mahasiswa
@@ -12,6 +9,8 @@ import java.io.IOException
 import android.net.http.HttpException
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 sealed class DetailUiState {
     data class Success(val mahasiswa: Mahasiswa) : DetailUiState()
@@ -20,14 +19,14 @@ sealed class DetailUiState {
 }
 
 class DetailViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
-    var detailUiState: DetailUiState by mutableStateOf(DetailUiState.Loading)
-        private set
+    private val _detailUiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
+    val detailUiState: StateFlow<DetailUiState> = _detailUiState
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     fun getMhsByNim(nim: String) {
         viewModelScope.launch {
-            detailUiState = DetailUiState.Loading
-            detailUiState = try {
+            _detailUiState.value = DetailUiState.Loading
+            _detailUiState.value = try {
                 val mahasiswa = mhs.getMahasiswaByNim(nim)
                 DetailUiState.Success(mahasiswa)
             } catch (e: IOException) {
@@ -43,11 +42,11 @@ class DetailViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 mhs.updateMahasiswa(nim, updatedMahasiswa)
-                detailUiState = DetailUiState.Success(updatedMahasiswa)
+                _detailUiState.value = DetailUiState.Success(updatedMahasiswa)
             } catch (e: IOException) {
-                detailUiState = DetailUiState.Error
+                _detailUiState.value = DetailUiState.Error
             } catch (e: HttpException) {
-                detailUiState = DetailUiState.Error
+                _detailUiState.value = DetailUiState.Error
             }
         }
     }
@@ -57,11 +56,11 @@ class DetailViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 mhs.deleteMahasiswa(nim)
-                detailUiState = DetailUiState.Loading
+                _detailUiState.value = DetailUiState.Loading // Optionally, you can set it to Loading or Success based on your logic
             } catch (e: IOException) {
-                detailUiState = DetailUiState.Error
+                _detailUiState.value = DetailUiState.Error
             } catch (e: HttpException) {
-                detailUiState = DetailUiState.Error
+                _detailUiState.value = DetailUiState.Error
             }
         }
     }

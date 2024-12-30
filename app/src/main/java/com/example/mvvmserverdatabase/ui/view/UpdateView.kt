@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -48,36 +49,124 @@ fun UpdateMhsScreen(
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val updateState = viewModel.UpdateuiState
-
-    // Load the Mahasiswa data when the screen is first composed
     LaunchedEffect(nim) {
         viewModel.loadMahasiswa(nim)
     }
+
+    val updateUiState = viewModel.UpdateuiState
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = "Update Mahasiswa",
+                title = DestinasiUpdate.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 navigateUp = navigateBack
             )
         }
     ) { innerPadding ->
-        EntryBody(
-            insertUiState = updateState,
-            onSiswaValueChange = viewModel::updateState,
-            onSaveClick = {
+        UpdateBody(
+            updateUiState = updateUiState,
+            onValueChange = viewModel::updateState,
+            onUpdateClick = {
                 coroutineScope.launch {
                     viewModel.updateMhs()
                     navigateBack()
                 }
             },
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun UpdateBody(
+    updateUiState: UpdateUiState,
+    onValueChange: (UpdateUiEvent) -> Unit,
+    onUpdateClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+        modifier = modifier.padding(26.dp)
+    ) {
+        UpdateFormInput(
+            updateUiEvent = updateUiState.updateUiEvent,
+            onValueChange = onValueChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Button(
+            onClick = onUpdateClick,
+            shape = MaterialTheme.shapes.small,
+        ) {
+            Text(text = "Update")
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpdateFormInput(
+    updateUiEvent: UpdateUiEvent,
+    modifier: Modifier = Modifier,
+    onValueChange: (UpdateUiEvent) -> Unit = {},
+    enabled: Boolean = true
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        OutlinedTextField(
+            value = updateUiEvent.nama,
+            onValueChange = { onValueChange(updateUiEvent.copy(nama = it)) },
+            label = { Text(text = "Nama") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = updateUiEvent.nim,
+            onValueChange = { onValueChange(updateUiEvent.copy(nim = it)) },
+            label = { Text(text = "NIM") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = false, // NIM tidak boleh diubah
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = updateUiEvent.jenisKelamin,
+            onValueChange = { onValueChange(updateUiEvent.copy(jenisKelamin = it)) },
+            label = { Text(text = "Jenis Kelamin") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = updateUiEvent.alamat,
+            onValueChange = { onValueChange(updateUiEvent.copy(alamat = it)) },
+            label = { Text(text = "Alamat") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = updateUiEvent.kelas,
+            onValueChange = { onValueChange(updateUiEvent.copy(kelas = it)) },
+            label = { Text(text = "Kelas") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = updateUiEvent.angkatan,
+            onValueChange = { onValueChange(updateUiEvent.copy(angkatan = it)) },
+            label = { Text(text = "Angkatan") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
         )
     }
 }
